@@ -1,0 +1,38 @@
+# ===== 数据（由 DVC 管理，原始数据不进 Git）=====
+/data/
+*.csv
+*.csv.gz
+
+# ===== 模型与 MLflow 实验产物（由 MLflow 记录，不进 Git）=====
+/models/
+*.pkl
+*.joblib
+/mlruns/
+/mlruns.db
+/mlruns.pid
+/mlartifacts/
+
+# ===== 环境变量（含密钥，禁止提交）=====
+.env
+.env.*
+!.env.example
+
+# ===== Python =====
+__pycache__/
+*.py[cod]
+*.egg-info/
+.ipynb_checkpoints/
+.venv/
+venv/
+env/
+
+# ===== 测试 / 缓存 =====
+.pytest_cache/
+.ruff_cache/
+*.cover
+
+# ===== 编辑器 / 系统 =====
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
