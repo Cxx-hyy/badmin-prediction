@@ -1,7 +1,9 @@
 # ===== 数据（由 DVC 管理，原始数据不进 Git）=====
-/data/
+# 注意：不能整体忽略 data/，否则 data/*.dvc 指针也无法提交；只忽略数据文件本身
 *.csv
 *.csv.gz
+*.tsv
+*.parquet
 
 # ===== 模型与 MLflow 实验产物（由 MLflow 记录，不进 Git）=====
 /models/

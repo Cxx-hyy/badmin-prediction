@@ -1,0 +1,5 @@
+[core]
+    remote = azurestorage
+['remote "azurestorage"']
+    url = azure://dvc-data/dvc
+    account_name = badminprediction
