@@ -28,10 +28,18 @@ __pycache__/
 venv/
 env/
 
-# ===== 测试 / 缓存 =====
+# ===== 测试 / 覆盖率 / 缓存 =====
 .pytest_cache/
 .ruff_cache/
 *.cover
+.coverage
+htmlcov/
+test-results/
+
+# ===== 本地数据库 / SQLite =====
+*.db
+*.db-*
+*.sqlite*
 
 # ===== 编辑器 / 系统 =====
 .vscode/
