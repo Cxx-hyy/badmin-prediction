@@ -1,0 +1,69 @@
+{
+  "results": [
+    {
+      "run_id": "b74deb85c4b94f5c89f8e7aeba707c21",
+      "run_name": "baseline_logistic_elo",
+      "model": "logistic",
+      "data_version": "v2",
+      "dvc_md5": "b7c62be31d2d78af250127a7086d18a7",
+      "git_sha": "622d1368152b64b2649020160a27584cb1aeab4b",
+      "params": {
+        "max_iter": 1000,
+        "C": 1.0,
+        "solver": "lbfgs"
+      },
+      "metrics": {
+        "accuracy": 0.6648533585619678,
+        "precision": 0.659372026641294,
+        "recall": 0.6641111643507427,
+        "f1": 0.6617331105275722
+      },
+      "registered_version": null
+    },
+    {
+      "run_id": "914d9a91b00e4a4c8fa9c555671d076e",
+      "run_name": "improved_rf_d10_l20",
+      "model": "random_forest",
+      "data_version": "v2",
+      "dvc_md5": "b7c62be31d2d78af250127a7086d18a7",
+      "git_sha": "622d1368152b64b2649020160a27584cb1aeab4b",
+      "params": {
+        "n_estimators": 300,
+        "max_depth": 10,
+        "min_samples_leaf": 20,
+        "max_features": "sqrt",
+        "random_state": 42
+      },
+      "metrics": {
+        "accuracy": 0.6705298013245033,
+        "precision": 0.670935960591133,
+        "recall": 0.6526114039290848,
+        "f1": 0.6616468302161769
+      },
+      "registered_version": null
+    },
+    {
+      "run_id": "f99ecd4e7a6045d6aa3282188e41c9cc",
+      "run_name": "improved_rf_d12_l10",
+      "model": "random_forest",
+      "data_version": "v2",
+      "dvc_md5": "b7c62be31d2d78af250127a7086d18a7",
+      "git_sha": "622d1368152b64b2649020160a27584cb1aeab4b",
+      "params": {
+        "n_estimators": 300,
+        "max_depth": 12,
+        "min_samples_leaf": 10,
+        "max_features": "sqrt",
+        "random_state": 42
+      },
+      "metrics": {
+        "accuracy": 0.6717123935666982,
+        "precision": 0.6704046806435885,
+        "recall": 0.6588404408241495,
+        "f1": 0.6645722571290479
+      },
+      "registered_version": 1
+    }
+  ],
+  "best_run_id": "f99ecd4e7a6045d6aa3282188e41c9cc"
+}
