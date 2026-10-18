@@ -14,13 +14,14 @@
 
 ## 数据版本总览
 
-| 版本 | 文件名 | 行数 | 说明 | Git 标签 |
-|------|--------|------|------|----------|
-| v1 | `data/match_stats_v1.csv` | 28,270 | 原始比赛结果，含文本字段与缺失值 | `data-v1` |
-| v2 | `data/match_stats_v2.csv` | 21,136 | 清洗 + 特征工程后的训练数据（13 个建模特征） | `data-v2` |
+| 版本 | 文件名 | 行数 | 说明 | Git 标签 | DVC md5 | 版本 commit 哈希（`git rev-list -n1 <tag>`） |
+|------|--------|------|------|----------|---------|-----------------------------------------------|
+| v1 | `data/match_stats_v1.csv` | 28,270 | 原始比赛结果，含文本字段与缺失值 | `data-v1` | `4dad64a71f0ed5f03a89384ee38e66fa` | `4db691155e706943af3e8ae4158d6940290d5582` |
+| v2 | `data/match_stats_v2.csv` | 21,136 | 清洗 + 特征工程后的训练数据（13 个建模特征） | `data-v2` | `b7c62be31d2d78af250127a7086d18a7` | `1bf137a9efd30fa0f6ad4695cea4da851ea06144` |
 
-> 标签即版本锚点，提交哈希可用 `git rev-parse data-v1` / `git rev-parse data-v2`
-> 查询（以 GitHub 远端标签为准）；`git checkout data-v2` 后 `dvc checkout` 即可还原对应数据。
+> 标签即版本锚点；上表 commit 哈希为 GitHub 远端标签实际指向（用
+> `git rev-list -n1 data-v1` / `git rev-list -n1 data-v2` 获取），DVC md5 为对应 `.dvc` 指针值。
+> 还原：`git checkout data-v2` 后 `dvc checkout` 即可得到对应数据；两个版本已实测可来回切换。
 
 ## v1 原始字段（`match_stats_v1.csv`）
 
