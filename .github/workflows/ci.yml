@@ -39,4 +39,4 @@ jobs:
         run: black --check .
 
       - name: Build Docker image
-        run: docker build -t badminton-api:ci-${{ github.sha }}.
+        run: docker build -t badminton-api:ci-${{ github.sha }} .
