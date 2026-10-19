@@ -1,3 +1,6 @@
+# ===== Python =====
+.venv/
+venv/
 # ===== 数据（由 DVC 管理，原始数据不进 Git）=====
 # 注意：不能整体忽略 data/，否则 data/*.dvc 指针也无法提交；只忽略数据文件本身
 *.csv
@@ -30,10 +33,26 @@ env/
 
 # ===== 测试 / 覆盖率 / 缓存 =====
 .pytest_cache/
+.mypy_cache/
 .ruff_cache/
-*.cover
+.tox/
+.nox/
 .coverage
+.coverage.*
+coverage.xml
 htmlcov/
+
+# ===== Environment =====
+.env
+.env.*
+.python-version
+.DS_Store
+
+# ===== Data (raw + processed) =====
+data/
+processed/
+
+# ===== Databases =====
 test-results/
 
 # ===== 本地数据库 / SQLite =====
@@ -41,8 +60,43 @@ test-results/
 *.db-*
 *.sqlite*
 
-# ===== 编辑器 / 系统 =====
+# ===== MLflow tracking store =====
+mlruns/
+
+# ===== Model / training artifacts =====
+model.pkl
+confusion_matrix.png
+*.joblib
+
+# ===== Test results =====
+test-results/
+
+# ===== DVC =====
+.dvc/
+
+# ===== Logs =====
+*.log
+logs/
+
+# ===== IDE / editors =====
 .vscode/
 .idea/
-.DS_Store
+*.iml
+*.swp
+*.swo
+*~
+
+# ===== Jupyter =====
+.ipynb_checkpoints/
+
+# ===== Build / packaging =====
+build/
+dist/
+*.egg-info/
+.eggs/
+pip-wheel-metadata/
+
+# ===== OS (Windows) =====
 Thumbs.db
+Desktop.ini
+$RECYCLE.BIN/
