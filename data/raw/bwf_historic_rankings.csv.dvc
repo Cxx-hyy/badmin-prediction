@@ -1,0 +1,5 @@
+outs:
+- md5: 46edf8e4f8f4719ca3f20ed3c6fd3472
+  size: 61732985
+  hash: md5
+  path: bwf_historic_rankings.csv

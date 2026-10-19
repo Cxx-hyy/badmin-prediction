@@ -1,5 +1,15 @@
 # 当前生产模型信息卡（current model）
 
+> **重要说明 —— 最终应用实际加载的模型**
+>
+> 最终交付的 FastAPI 应用（`app/main.py`）加载的是仓库根 `model.pkl` 中的
+> **8 特征随机森林 bundle**（基于 BWF 真实排名），完整说明见
+> **[`README_app_model.md`](README_app_model.md)**。
+>
+> 本信息卡描述的是成员 C 在研究阶段完成、并通过 MLflow 注册的
+> **13 特征模型（`badmin-win-predictor`，基于内部 Elo）**，作为方法研究与
+> 模型注册实践保留；两套体系的对照见 `README_app_model.md` 第 7 节。
+
 > 本文件描述当前线上（production）模型的全部关键信息。模型更新后请同步更新本卡。
 
 ## 身份信息
