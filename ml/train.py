@@ -32,6 +32,13 @@ from sklearn.metrics import (
     f1_score,
     roc_auc_score,
 )
+from sklearn.metrics import (accuracy_score, roc_auc_score, f1_score,
+                             confusion_matrix, ConfusionMatrixDisplay)
+import joblib
+from pathlib import Path
+
+# 仓库根目录(本文件位于 ml/ 下)
+ROOT = Path(__file__).resolve().parent.parent
 
 # 仓库根目录(本文件位于 ml/ 下)
 ROOT = Path(__file__).resolve().parent.parent
