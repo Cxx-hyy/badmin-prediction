@@ -117,29 +117,35 @@ def build_features(df, min_matches=MIN_MATCHES):
         label = 1 if winner == 1 else 0
 
         if m1 >= min_matches and m2 >= min_matches:
-            rows.append({
-                "date": rec.date.strftime("%Y-%m-%d"),
-                "team1": p1, "team2": p2,
-                # 信息列（便于解释/展示，不全用于训练）
-                "elo_1": round(e1, 2), "elo_2": round(e2, 2),
-                "win_rate_1": round(wr1, 4), "win_rate_2": round(wr2, 4),
-                "matches_1": m1, "matches_2": m2,
-                # 建模特征
-                "elo_diff": round(e1 - e2, 2),
-                "win_rate_diff": round(wr1 - wr2, 4),
-                "recent_form_1": round(form1, 4),
-                "recent_form_2": round(form2, 4),
-                "h2h_matches": h2h_matches,
-                "h2h_win_rate_1": round(h2h_wr1, 4),
-                "point_margin_1": round(margin1, 3),
-                "point_margin_2": round(margin2, 3),
-                "point_margin_diff": round(margin1 - margin2, 3),
-                "game_win_rate_1": round(gwr1, 4),
-                "game_win_rate_2": round(gwr2, 4),
-                "at_home_1": int(bool(rec.team1_at_home)),
-                "at_home_2": int(bool(rec.team2_at_home)),
-                "label": label,
-            })
+            rows.append(
+                {
+                    "date": rec.date.strftime("%Y-%m-%d"),
+                    "team1": p1,
+                    "team2": p2,
+                    # 信息列（便于解释/展示，不全用于训练）
+                    "elo_1": round(e1, 2),
+                    "elo_2": round(e2, 2),
+                    "win_rate_1": round(wr1, 4),
+                    "win_rate_2": round(wr2, 4),
+                    "matches_1": m1,
+                    "matches_2": m2,
+                    # 建模特征
+                    "elo_diff": round(e1 - e2, 2),
+                    "win_rate_diff": round(wr1 - wr2, 4),
+                    "recent_form_1": round(form1, 4),
+                    "recent_form_2": round(form2, 4),
+                    "h2h_matches": h2h_matches,
+                    "h2h_win_rate_1": round(h2h_wr1, 4),
+                    "point_margin_1": round(margin1, 3),
+                    "point_margin_2": round(margin2, 3),
+                    "point_margin_diff": round(margin1 - margin2, 3),
+                    "game_win_rate_1": round(gwr1, 4),
+                    "game_win_rate_2": round(gwr2, 4),
+                    "at_home_1": int(bool(rec.team1_at_home)),
+                    "at_home_2": int(bool(rec.team2_at_home)),
+                    "label": label,
+                }
+            )
 
         # ---- 比赛后：用本场结果更新统计量 ----
         win_p, lose_p = (p1, p2) if winner == 1 else (p2, p1)
@@ -189,12 +195,19 @@ def make_dataset(out_path=None):
 BASELINE_FEATURE_COLUMNS = ["elo_diff", "at_home_1", "at_home_2"]
 # improved 使用的全部工程特征
 FEATURE_COLUMNS = [
-    "elo_diff", "win_rate_diff",
-    "recent_form_1", "recent_form_2",
-    "h2h_matches", "h2h_win_rate_1",
-    "point_margin_1", "point_margin_2", "point_margin_diff",
-    "game_win_rate_1", "game_win_rate_2",
-    "at_home_1", "at_home_2",
+    "elo_diff",
+    "win_rate_diff",
+    "recent_form_1",
+    "recent_form_2",
+    "h2h_matches",
+    "h2h_win_rate_1",
+    "point_margin_1",
+    "point_margin_2",
+    "point_margin_diff",
+    "game_win_rate_1",
+    "game_win_rate_2",
+    "at_home_1",
+    "at_home_2",
 ]
 TARGET_COLUMN = "label"
 

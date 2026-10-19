@@ -12,6 +12,7 @@ ml/predict.py —— 单场比赛特征构造器
   4. 可选输入 -> tier_level / home_adv
 """
 import os
+
 import pandas as pd
 
 from ml import data_pipeline as dp
@@ -21,8 +22,16 @@ _MS_PATH = os.path.join(_ROOT, "data", "raw", "ms.csv")
 _RK_PATH = os.path.join(_ROOT, "data", "raw", "bwf_historic_rankings.csv")
 
 # 8 个特征(与 train.py 的 V2 顺序一致)
-FEATURES = ["points_share", "h2h_winrate", "form5_1", "form5_2",
-            "rank_diff", "points_diff", "tier_level", "home_adv"]
+FEATURES = [
+    "points_share",
+    "h2h_winrate",
+    "form5_1",
+    "form5_2",
+    "rank_diff",
+    "points_diff",
+    "tier_level",
+    "home_adv",
+]
 
 # 未提供赛事级别时的默认级别分(中等级别)
 DEFAULT_TIER_LEVEL = 5
@@ -82,8 +91,9 @@ def resolve_player(query, rk_names):
         return None, []
 
     # 输入 token 是某标准名 token 的子集(解决 "Axelsen" -> "VIKTOR AXELSEN")
-    candidates = sorted({n for n in rk_names if qt.issubset(dp.tokens(n))},
-                        key=lambda n: len(dp.tokens(n)))
+    candidates = sorted(
+        {n for n in rk_names if qt.issubset(dp.tokens(n))}, key=lambda n: len(dp.tokens(n))
+    )
     if len(candidates) == 1:
         return candidates[0], []
 
@@ -175,7 +185,7 @@ def build_match_features(player1, player2, match_date, tier=None, home_adv=None)
     form5_1 = dp.win_rate_last_n(hist1, 5)
     form5_2 = dp.win_rate_last_n(hist2, 5)
     n = w1 + w2
-    h2h_winrate = (w1 + 1) / (n + 2)          # 贝叶斯平滑, 没交过手=0.5
+    h2h_winrate = (w1 + 1) / (n + 2)  # 贝叶斯平滑, 没交过手=0.5
 
     # ---- 可选输入 ----
     tier_val = dp.tier_level(tier) if tier else DEFAULT_TIER_LEVEL

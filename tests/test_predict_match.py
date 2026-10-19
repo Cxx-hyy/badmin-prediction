@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
 """测试按选手名预测: 人名解析 + 特征构造。"""
-import sys, os
+import os
+import sys
+
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
 import pytest
 
-from ml.predict import resolve_player, build_match_features, FEATURES
+from ml.predict import FEATURES, build_match_features, resolve_player
 
 # 排名表标准名的样例(用于纯函数测试, 不依赖大数据)
 RK_NAMES = [
@@ -43,11 +45,12 @@ def test_resolve_player_not_found():
 
 
 # ---------- 特征构造(依赖真实数据, 数据缺失则跳过) ----------
-_DATA_MISSING = not (os.path.exists(os.path.join(os.path.dirname(__file__), "..",
-                                                 "data", "raw", "ms.csv"))
-                     and os.path.exists(os.path.join(os.path.dirname(__file__), "..",
-                                                     "data", "raw",
-                                                     "bwf_historic_rankings.csv")))
+_DATA_MISSING = not (
+    os.path.exists(os.path.join(os.path.dirname(__file__), "..", "data", "raw", "ms.csv"))
+    and os.path.exists(
+        os.path.join(os.path.dirname(__file__), "..", "data", "raw", "bwf_historic_rankings.csv")
+    )
+)
 
 
 @pytest.mark.skipif(_DATA_MISSING, reason="原始数据不存在, 跳过集成测试")

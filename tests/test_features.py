@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 """测试 ml/data_pipeline.py 里的纯函数: 手算结果对照 + 边界情况。"""
-import sys, os
+import os
+import sys
+
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
-from ml.data_pipeline import tokens, win_rate_last_n, tier_level
+from ml.data_pipeline import tier_level, tokens, win_rate_last_n
 
 
 def test_points_share_manual():
@@ -33,4 +35,4 @@ def test_tokens_normalize():
 def test_tier_level():
     assert tier_level("HSBC BWF World Tour Super 1000") == 7
     assert tier_level("Grand Prix") == 3
-    assert tier_level("unknown") == 2   # 未知级别兜底
+    assert tier_level("unknown") == 2  # 未知级别兜底

@@ -22,10 +22,11 @@
 运行:  python 02_data_pipeline.py
 产出:  processed/features.csv
 """
+import difflib
 import os
 import re
 import sys
-import difflib
+
 import pandas as pd
 
 # 让 stdout 以 UTF-8 输出(Windows 控制台默认 GBK, 打印中文/特殊字符可能报错)
@@ -84,7 +85,7 @@ def build_name_map(ms_players, rk_names):
 
     def match(p):
         pt = tokens(p)
-        if len(pt) < 2:              # 单 token 名字太容易误配, 跳过
+        if len(pt) < 2:  # 单 token 名字太容易误配, 跳过
             return None
         # 1) 完全相等
         exact = [n for n, rt in rk_tok if pt == rt]
@@ -111,7 +112,7 @@ def build_rank_lookup(rk):
     """每个标准名 -> 按日期升序的 (日期, 名次, 积分) 列表。"""
     lookup = {}
     for name, g in rk.sort_values(["name", "date"]).groupby("name"):
-        lookup[name] = list(zip(g["date"], g["rank"], g["points"]))
+        lookup[name] = list(zip(g["date"], g["rank"], g["points"], strict=True))
     return lookup
 
 
@@ -134,7 +135,7 @@ def latest_rank(name, match_date, lookup):
 # ---------- 第 4 步: 造特征 ----------
 def win_rate_last_n(hist, n):
     """最近 n 场胜率; 没打过取 0.5(中性先验)。"""
-    recent = hist[-n:]                      # 取最后 n 场(即最近 n 场)
+    recent = hist[-n:]  # 取最后 n 场(即最近 n 场)
     return (sum(recent) / len(recent)) if recent else 0.5
 
 
@@ -148,17 +149,28 @@ def to_bool(v):
 def tier_level(t):
     """把赛事级别字符串映射成一个"级别分"(越高越重要)。"""
     s = str(t)
-    if "Grade 1" in s: return 8     # 世锦赛/奥运(最高)
-    if "Finals" in s: return 7      # 年终总决赛
-    if "1000" in s: return 7        # Super 1000
-    if "750" in s: return 6
-    if "Premier" in s: return 6     # 老顶级赛
-    if "500" in s: return 5
-    if "Superseries" in s: return 5
-    if "300" in s: return 4
-    if "Gold" in s: return 4        # Grand Prix Gold
-    if "100" in s: return 3
-    if "Grand Prix" in s: return 3
+    if "Grade 1" in s:
+        return 8  # 世锦赛/奥运(最高)
+    if "Finals" in s:
+        return 7  # 年终总决赛
+    if "1000" in s:
+        return 7  # Super 1000
+    if "750" in s:
+        return 6
+    if "Premier" in s:
+        return 6  # 老顶级赛
+    if "500" in s:
+        return 5
+    if "Superseries" in s:
+        return 5
+    if "300" in s:
+        return 4
+    if "Gold" in s:
+        return 4  # Grand Prix Gold
+    if "100" in s:
+        return 3
+    if "Grand Prix" in s:
+        return 3
     return 2
 
 
@@ -179,17 +191,17 @@ def build_features(ms, rk):
     ms = ms.sort_values("date").reset_index(drop=True)
 
     lookup = build_rank_lookup(rk)
-    hist = {}    # 选手 -> [是否赢(按时间顺序)]
-    h2h = {}     # (p1,p2)排序键 -> [先者胜场, 后者胜场]
+    hist = {}  # 选手 -> [是否赢(按时间顺序)]
+    h2h = {}  # (p1,p2)排序键 -> [先者胜场, 后者胜场]
     rows = []
 
     for _, r in ms.iterrows():
         d, p1, p2 = r["date"], r["p1"], r["p2"]
-        win1 = r["winner"] == 1                       # team1 是否赢(这就是标签)
+        win1 = r["winner"] == 1  # team1 是否赢(这就是标签)
 
-        l1 = latest_rank(p1, d, lookup)               # 双方"赛前"排名
+        l1 = latest_rank(p1, d, lookup)  # 双方"赛前"排名
         l2 = latest_rank(p2, d, lookup)
-        if l1 is None or l2 is None:                  # 任一查不到就跳过
+        if l1 is None or l2 is None:  # 任一查不到就跳过
             continue
         _, rank1, pts1 = l1
         _, rank2, pts2 = l2
@@ -204,23 +216,29 @@ def build_features(ms, rk):
         w1, w2 = h2h.get(k, [0, 0])
         h2h_w1 = w1 if p1 == k[0] else w2
         n = w1 + w2
-        h2h_winrate = (h2h_w1 + 1) / (n + 2)          # (胜+1)/(总+2)
+        h2h_winrate = (h2h_w1 + 1) / (n + 2)  # (胜+1)/(总+2)
         # --- 特征 4: 排名差 / 积分差 / 赛事级别 / 主客场 ---
-        rank_diff = rank1 - rank2                      # 负 => team1 排名更靠前
-        points_diff = pts1 - pts2                      # 正 => team1 积分更多
+        rank_diff = rank1 - rank2  # 负 => team1 排名更靠前
+        points_diff = pts1 - pts2  # 正 => team1 积分更多
         home_adv = int(to_bool(r["team1_at_home"])) - int(to_bool(r["team2_at_home"]))
         # home_adv: 1=team1是东道主, 0=中立, -1=team2是东道主
 
-        rows.append({
-            "date": d, "team1": r["team1"], "team2": r["team2"],
-            "label": int(win1),                        # 标签: 1=team1胜, 0=team2胜
-            "points_share": points_share,
-            "h2h_winrate": h2h_winrate,
-            "form5_1": f1, "form5_2": f2,
-            "rank_diff": rank_diff, "points_diff": points_diff,
-            "tier_level": tier_level(r["tier"]),
-            "home_adv": home_adv,
-        })
+        rows.append(
+            {
+                "date": d,
+                "team1": r["team1"],
+                "team2": r["team2"],
+                "label": int(win1),  # 标签: 1=team1胜, 0=team2胜
+                "points_share": points_share,
+                "h2h_winrate": h2h_winrate,
+                "form5_1": f1,
+                "form5_2": f2,
+                "rank_diff": rank_diff,
+                "points_diff": points_diff,
+                "tier_level": tier_level(r["tier"]),
+                "home_adv": home_adv,
+            }
+        )
 
         # --- 用"当次结果"更新历史, 保证后续比赛只看到过去(防泄漏) ---
         hist.setdefault(p1, []).append(win1)

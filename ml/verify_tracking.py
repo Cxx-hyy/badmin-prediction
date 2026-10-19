@@ -7,8 +7,8 @@
 import sys
 from pathlib import Path
 
-import pandas as pd
 import mlflow
+import pandas as pd
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO_ROOT))
@@ -28,9 +28,11 @@ def main():
     print(f"=== 实验 {exp.name}：{len(runs)} 个 run ===")
     for r in runs:
         p, m, t = r.data.params, r.data.metrics, r.data.tags
-        print(f"- {r.info.run_name}  model={p.get('model_type')} "
-              f"features={p.get('n_features')} git={t.get('git_commit_sha','')[:10]} "
-              f"dvc={p.get('dvc_data_md5','')[:10]}")
+        print(
+            f"- {r.info.run_name}  model={p.get('model_type')} "
+            f"features={p.get('n_features')} git={t.get('git_commit_sha','')[:10]} "
+            f"dvc={p.get('dvc_data_md5','')[:10]}"
+        )
         print(f"    acc={m.get('accuracy'):.4f} f1={m.get('f1'):.4f}")
 
     print("\n=== 注册模型 ===")
