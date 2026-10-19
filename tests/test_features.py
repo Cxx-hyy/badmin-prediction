@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 """测试 ml/data_pipeline.py 里的纯函数: 手算结果对照 + 边界情况。"""
-import sys, os
+import os
+import sys
+
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
-from ml.data_pipeline import tokens, win_rate_last_n, tier_level
+from ml.data_pipeline import tier_level, tokens, win_rate_last_n
 
 
 def test_points_share_manual():

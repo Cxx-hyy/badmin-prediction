@@ -22,10 +22,11 @@
 运行:  python 02_data_pipeline.py
 产出:  processed/features.csv
 """
+import difflib
 import os
 import re
 import sys
-import difflib
+
 import pandas as pd
 
 # 让 stdout 以 UTF-8 输出(Windows 控制台默认 GBK, 打印中文/特殊字符可能报错)
@@ -111,7 +112,7 @@ def build_rank_lookup(rk):
     """每个标准名 -> 按日期升序的 (日期, 名次, 积分) 列表。"""
     lookup = {}
     for name, g in rk.sort_values(["name", "date"]).groupby("name"):
-        lookup[name] = list(zip(g["date"], g["rank"], g["points"]))
+        lookup[name] = list(zip(g["date"], g["rank"], g["points"], strict=True))
     return lookup
 
 
@@ -148,17 +149,28 @@ def to_bool(v):
 def tier_level(t):
     """把赛事级别字符串映射成一个"级别分"(越高越重要)。"""
     s = str(t)
-    if "Grade 1" in s: return 8     # 世锦赛/奥运(最高)
-    if "Finals" in s: return 7      # 年终总决赛
-    if "1000" in s: return 7        # Super 1000
-    if "750" in s: return 6
-    if "Premier" in s: return 6     # 老顶级赛
-    if "500" in s: return 5
-    if "Superseries" in s: return 5
-    if "300" in s: return 4
-    if "Gold" in s: return 4        # Grand Prix Gold
-    if "100" in s: return 3
-    if "Grand Prix" in s: return 3
+    if "Grade 1" in s: 
+        return 8     # 世锦赛/奥运(最高)
+    if "Finals" in s: 
+        return 7      # 年终总决赛
+    if "1000" in s: 
+        return 7        # Super 1000
+    if "750" in s: 
+        return 6
+    if "Premier" in s: 
+        return 6     # 老顶级赛
+    if "500" in s: 
+        return 5
+    if "Superseries" in s: 
+        return 5
+    if "300" in s: 
+        return 4
+    if "Gold" in s: 
+        return 4        # Grand Prix Gold
+    if "100" in s: 
+        return 3
+    if "Grand Prix" in s: 
+        return 3
     return 2
 
 

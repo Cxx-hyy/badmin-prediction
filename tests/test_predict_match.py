@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
 """测试按选手名预测: 人名解析 + 特征构造。"""
-import sys, os
+import os
+import sys
+
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
 import pytest
 
-from ml.predict import resolve_player, build_match_features, FEATURES
+from ml.predict import FEATURES, build_match_features, resolve_player
 
 # 排名表标准名的样例(用于纯函数测试, 不依赖大数据)
 RK_NAMES = [

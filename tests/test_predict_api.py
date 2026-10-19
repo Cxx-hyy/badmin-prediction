@@ -1,9 +1,12 @@
 # -*- coding: utf-8 -*-
 """测试 FastAPI 接口: 合法输入、缺字段、非法值、A/B 互换对称性。"""
-import sys, os
+import os
+import sys
+
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
 from fastapi.testclient import TestClient
+
 from app.main import app
 
 client = TestClient(app)

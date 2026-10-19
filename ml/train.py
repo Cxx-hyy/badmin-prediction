@@ -11,20 +11,25 @@ ml/train.py —— 训练脚本(集成 MLflow 实验追踪)
 运行:
     python ml/train.py
 """
-import os
-import sys
 import subprocess
-import pandas as pd
+import sys
+
 import matplotlib
+import pandas as pd
+
 matplotlib.use("Agg")                    # 无界面环境下保存图
+import joblib
 import matplotlib.pyplot as plt
 import mlflow
 import mlflow.sklearn
-from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import (accuracy_score, roc_auc_score, f1_score,
-                             confusion_matrix, ConfusionMatrixDisplay)
-import joblib
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import (
+    ConfusionMatrixDisplay,
+    accuracy_score,
+    f1_score,
+    roc_auc_score,
+)
 
 # 让 stdout 以 UTF-8 输出(Windows 控制台默认 GBK, 打印中文/特殊字符可能报错)
 _reconfigure = getattr(sys.stdout, "reconfigure", None)

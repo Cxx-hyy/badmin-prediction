@@ -1,11 +1,14 @@
 # -*- coding: utf-8 -*-
 """端到端测试: 用临时训练的小模型, 验证预测方向正确。"""
-import sys, os
+import os
+import sys
+
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
 import numpy as np
-from sklearn.linear_model import LogisticRegression
 from fastapi.testclient import TestClient
+from sklearn.linear_model import LogisticRegression
+
 import app.main as main
 
 # 造一个"积分占比越高越可能赢"的玩具模型

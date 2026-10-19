@@ -9,9 +9,10 @@ app/main.py —— FastAPI 服务: 输入一场比赛的赛前特征, 输出 tea
   POST /predict_match  输入选手名+日期 -> 自动算特征 -> 返回 player1 胜率
 """
 import os
-import pandas as pd
-import joblib
 from datetime import date as date_type
+
+import joblib
+import pandas as pd
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel, Field
 
@@ -89,7 +90,7 @@ def predict_match(req: MatchRequest):
         res = build_match_features(req.player1, req.player2, req.date,
                                    req.tier, req.home_adv)
     except ValueError as e:
-        raise HTTPException(status_code=400, detail=str(e))
+        raise HTTPException(status_code=400, detail=str(e)) from e
 
     f = res["features"]
     x = pd.DataFrame([f])[features]                # 按训练时的特征顺序取列
