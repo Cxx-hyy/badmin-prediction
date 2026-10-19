@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 """
 ml/train.py —— 训练脚本(集成 MLflow 实验追踪)
-==============================================
 对照 instructions 的要求, 每轮实验记录:
   - 参数: git commit SHA、数据集版本、模型类型、特征集
   - 指标: accuracy / AUC / F1

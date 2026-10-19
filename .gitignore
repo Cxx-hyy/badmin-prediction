@@ -1,8 +1,37 @@
 # ===== Python =====
 .venv/
 venv/
+# ===== 数据（由 DVC 管理，原始数据不进 Git）=====
+# 注意：不能整体忽略 data/，否则 data/*.dvc 指针也无法提交；只忽略数据文件本身
+*.csv
+*.csv.gz
+*.tsv
+*.parquet
+
+# ===== 模型与 MLflow 实验产物（由 MLflow 记录，不进 Git）=====
+/models/
+*.pkl
+*.joblib
+/mlruns/
+/mlruns.db
+/mlruns.pid
+/mlartifacts/
+
+# ===== 环境变量（含密钥，禁止提交）=====
+.env
+.env.*
+!.env.example
+
+# ===== Python =====
 __pycache__/
 *.py[cod]
+*.egg-info/
+.ipynb_checkpoints/
+.venv/
+venv/
+env/
+
+# ===== 测试 / 覆盖率 / 缓存 =====
 .pytest_cache/
 .mypy_cache/
 .ruff_cache/
@@ -24,6 +53,9 @@ data/
 processed/
 
 # ===== Databases =====
+test-results/
+
+# ===== 本地数据库 / SQLite =====
 *.db
 *.db-*
 *.sqlite*
