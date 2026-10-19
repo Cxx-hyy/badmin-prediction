@@ -35,4 +35,4 @@ def test_tokens_normalize():
 def test_tier_level():
     assert tier_level("HSBC BWF World Tour Super 1000") == 7
     assert tier_level("Grand Prix") == 3
-    assert tier_level("unknown") == 2   # 未知级别兜底
+    assert tier_level("unknown") == 2  # 未知级别兜底

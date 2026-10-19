@@ -41,6 +41,7 @@ load_model()
 
 class MatchFeatures(BaseModel):
     """一场比赛的赛前特征。加约束可做输入校验(对应测试的边界情况)。"""
+
     points_share: float = Field(ge=0, le=1, description="team1 积分占比")
     h2h_winrate: float = Field(ge=0, le=1, description="team1 历史交手胜率")
     form5_1: float = Field(ge=0, le=1, description="team1 近5场胜率")
@@ -53,13 +54,12 @@ class MatchFeatures(BaseModel):
 
 class MatchRequest(BaseModel):
     """按选手名预测的输入。tier 和 home_adv 可选。"""
+
     player1: str = Field(description="选手1 名字, 支持部分匹配, 如 Axelsen")
     player2: str = Field(description="选手2 名字")
     date: date_type = Field(description="比赛日期, YYYY-MM-DD")
     tier: str | None = Field(default=None, description="赛事级别字符串, 可选")
-    home_adv: int | None = Field(default=None, ge=-1, le=1,
-                                description="主客场: 1/0/-1, 可选")
-
+    home_adv: int | None = Field(default=None, ge=-1, le=1, description="主客场: 1/0/-1, 可选")
 
 
 @app.get("/health")
@@ -73,7 +73,7 @@ def health():
 def predict(m: MatchFeatures):
     if model is None:
         raise HTTPException(status_code=503, detail="model not loaded")
-    x = pd.DataFrame([m.model_dump()])[features]   # 按训练时的特征顺序取列
+    x = pd.DataFrame([m.model_dump()])[features]  # 按训练时的特征顺序取列
     prob = model.predict_proba(x)[0][1]
     return {
         "team1_win_probability": round(float(prob), 4),
@@ -87,20 +87,17 @@ def predict_match(req: MatchRequest):
     if model is None:
         raise HTTPException(status_code=503, detail="model not loaded")
     try:
-        res = build_match_features(req.player1, req.player2, req.date,
-                                   req.tier, req.home_adv)
+        res = build_match_features(req.player1, req.player2, req.date, req.tier, req.home_adv)
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e)) from e
 
     f = res["features"]
-    x = pd.DataFrame([f])[features]                # 按训练时的特征顺序取列
+    x = pd.DataFrame([f])[features]  # 按训练时的特征顺序取列
     prob = model.predict_proba(x)[0][1]
     return {
         "player1": res["player1"],
         "player2": res["player2"],
         "player1_win_probability": round(float(prob), 4),
         "prediction": "player1" if prob >= 0.5 else "player2",
-        "features": {k: (round(v, 4) if isinstance(v, float) else v)
-                     for k, v in f.items()},
+        "features": {k: (round(v, 4) if isinstance(v, float) else v) for k, v in f.items()},
     }
-    

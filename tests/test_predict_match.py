@@ -45,11 +45,12 @@ def test_resolve_player_not_found():
 
 
 # ---------- 特征构造(依赖真实数据, 数据缺失则跳过) ----------
-_DATA_MISSING = not (os.path.exists(os.path.join(os.path.dirname(__file__), "..",
-                                                 "data", "raw", "ms.csv"))
-                     and os.path.exists(os.path.join(os.path.dirname(__file__), "..",
-                                                     "data", "raw",
-                                                     "bwf_historic_rankings.csv")))
+_DATA_MISSING = not (
+    os.path.exists(os.path.join(os.path.dirname(__file__), "..", "data", "raw", "ms.csv"))
+    and os.path.exists(
+        os.path.join(os.path.dirname(__file__), "..", "data", "raw", "bwf_historic_rankings.csv")
+    )
+)
 
 
 @pytest.mark.skipif(_DATA_MISSING, reason="原始数据不存在, 跳过集成测试")

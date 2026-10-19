@@ -25,15 +25,35 @@ client = TestClient(main.app)
 
 def test_high_points_predicts_team1():
     # 积分占比高 -> 应判 team1
-    r = client.post("/predict", json={
-        "points_share": 0.9, "h2h_winrate": 0.5, "form5_1": 0.5, "form5_2": 0.5,
-        "rank_diff": 0, "points_diff": 0, "tier_level": 5, "home_adv": 0})
+    r = client.post(
+        "/predict",
+        json={
+            "points_share": 0.9,
+            "h2h_winrate": 0.5,
+            "form5_1": 0.5,
+            "form5_2": 0.5,
+            "rank_diff": 0,
+            "points_diff": 0,
+            "tier_level": 5,
+            "home_adv": 0,
+        },
+    )
     assert r.status_code == 200
     assert r.json()["prediction"] == "team1"
 
 
 def test_low_points_predicts_team2():
-    r = client.post("/predict", json={
-        "points_share": 0.1, "h2h_winrate": 0.5, "form5_1": 0.5, "form5_2": 0.5,
-        "rank_diff": 0, "points_diff": 0, "tier_level": 5, "home_adv": 0})
+    r = client.post(
+        "/predict",
+        json={
+            "points_share": 0.1,
+            "h2h_winrate": 0.5,
+            "form5_1": 0.5,
+            "form5_2": 0.5,
+            "rank_diff": 0,
+            "points_diff": 0,
+            "tier_level": 5,
+            "home_adv": 0,
+        },
+    )
     assert r.json()["prediction"] == "team2"
