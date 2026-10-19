@@ -1,0 +1,55 @@
+name: CD
+
+on:
+  push:
+    branches: [staging, main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: cd-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  build-staging:
+    if: github.ref == 'refs/heads/staging'
+    runs-on: ubuntu-latest
+    environment: staging
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Generate .env from stagingSecrets
+        env:
+          STAGING_SECRETS: ${{ secrets.STAGING_SECRETS }}
+        run: |
+          test -n "$STAGING_SECRETS" || { echo "STAGING_SECRETS 未配置"; exit 1; }
+          printf '%s\n' "$STAGING_SECRETS" > .env
+          chmod 600 .env
+
+      - name: Build staging image
+        run: docker build --build-arg APP_ENV=staging -t badminton-api:staging-${{ github.sha }} .
+
+      - name: Verify image
+        run: docker image inspect badminton-api:staging-${{ github.sha }} >/dev/null
+
+  build-prod:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment: prod
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Generate .env from prodSecrets
+        env:
+          PROD_SECRETS: ${{ secrets.PROD_SECRETS }}
+        run: |
+          test -n "$PROD_SECRETS" || { echo "PROD_SECRETS 未配置"; exit 1; }
+          printf '%s\n' "$PROD_SECRETS" > .env
+          chmod 600 .env
+
+      - name: Build production image
+        run: docker build --build-arg APP_ENV=production -t badminton-api:prod-${{ github.sha }} .
+
+      - name: Verify image
+        run: docker image inspect badminton-api:prod-${{ github.sha }} >/dev/null
