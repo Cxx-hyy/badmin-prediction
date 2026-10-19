@@ -49,8 +49,17 @@ htmlcov/
 .DS_Store
 
 # ===== Data (raw + processed) =====
-data/
-processed/
+# 不整体忽略 data/(否则无法重新包含其中的 .dvc 指针),
+# 采用"忽略内容、保留目录和 DVC 指针"模式
+data/*
+!data/*.dvc
+!data/raw/
+!data/processed/
+data/raw/*
+!data/raw/*.dvc
+data/processed/*
+!data/processed/*.dvc
+/processed/
 
 # ===== Databases =====
 test-results/

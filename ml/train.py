@@ -30,7 +30,10 @@ from sklearn.metrics import (
     f1_score,
     roc_auc_score,
 )
+from pathlib import Path
 
+# 仓库根目录(本文件位于 ml/ 下)
+ROOT = Path(__file__).resolve().parent.parent
 # 让 stdout 以 UTF-8 输出(Windows 控制台默认 GBK, 打印中文/特殊字符可能报错)
 _reconfigure = getattr(sys.stdout, "reconfigure", None)
 if _reconfigure is not None:
@@ -79,19 +82,32 @@ def run_experiment(run_name, model, features, dataset_version, train, test):
         # ---- 记录制品: 混淆矩阵图 ----
         fig, ax = plt.subplots(figsize=(4, 4))
         ConfusionMatrixDisplay.from_predictions(test["label"], pred, ax=ax)
-        fig.savefig("confusion_matrix.png")
+        cm_path = ROOT / "confusion_matrix.png"
+        fig.savefig(cm_path)
         plt.close(fig)
-        mlflow.log_artifact("confusion_matrix.png")
+        mlflow.log_artifact(str(cm_path))
 
         # ---- 记录制品: 模型文件 ----
-        mlflow.sklearn.log_model(model, "model")
+        # 模型为我们自己训练, 显式信任 RF 的 Tree 类型(MLflow 3.x skops 安全扫描要求)
+        mlflow.sklearn.log_model(
+            model, "model",
+            skops_trusted_types=["sklearn.tree._tree.Tree"],
+        )
 
         print(f"[{run_name}] acc={acc:.3f}  auc={auc:.3f}  f1={f1:.3f}")
         return model
 
 
 def main():
-    df = pd.read_csv("data/processed/features.csv", parse_dates=["date"])
+    # —— MLOps: 固定跟踪后端 ——
+    # 用动态绝对路径直接连接 SQLite, 不经过 MLflow 相对路径解析
+    # (MLflow 3.x 在 Windows 中文路径下会把路径 URL 编码, 导致建库失败)
+    db_path = ROOT / "mlruns" / "mlflow.db"
+    mlflow.set_tracking_uri("sqlite:///" + str(db_path).replace("\\", "/"))
+    # 8 特征体系对应最终 app, 单独建实验, 与 13 特征研究实验区分
+    mlflow.set_experiment("badminton-app-8feat")
+
+    df = pd.read_csv(ROOT / "data/processed/features.csv", parse_dates=["date"])
     train = df[df["date"].dt.year < SPLIT_YEAR]
     test = df[df["date"].dt.year >= SPLIT_YEAR]
 
@@ -107,8 +123,9 @@ def main():
     # 保存"生产模型"(供 app/main.py 加载)
     final = RandomForestClassifier(n_estimators=300, max_depth=6, random_state=0)
     final.fit(train[V2], train["label"])
-    joblib.dump({"features": V2, "model": final}, "model.pkl")
-    print("\n生产模型已保存到 model.pkl")
+    model_path = ROOT / "model.pkl"
+    joblib.dump({"features": V2, "model": final}, model_path)
+    print(f"\n生产模型已保存到 {model_path}")
 
 
 if __name__ == "__main__":

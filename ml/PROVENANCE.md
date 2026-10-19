@@ -3,6 +3,19 @@
 本文件记录从**原始数据**到**线上预测**的完整链路，确保任何一次预测都能回答：
 "用的是哪份数据、哪版代码、哪次实验、哪个模型文件？"
 
+> **最终应用链路（8 特征）**
+>
+> 最终交付的 FastAPI 应用采用 **8 特征模型**，其完整溯源链为：
+> `data/raw/ms.csv` + `data/raw/bwf_historic_rankings.csv`（DVC md5
+> `4dad64a7…` / `46edf8e4…`）→ `ml/data_pipeline.py` →
+> `data/processed/features.csv`（md5 `f68e2d1a…`，9,641 行）→
+> `ml/train.py`（MLflow 实验 `badminton-app-8feat`）→
+> 仓库根 `model.pkl`（8 特征 bundle）→ `app/main.py` 加载。
+> 详见 [`README_app_model.md`](README_app_model.md)。
+>
+> 下方"溯源链路总览"描述的是研究阶段的 **13 特征（Elo）体系**，
+> 作为方法研究与模型注册实践保留。
+
 ## 溯源链路总览
 
 ```
