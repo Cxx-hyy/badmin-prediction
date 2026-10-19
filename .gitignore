@@ -1,12 +1,70 @@
+# ===== Python =====
 .venv/
+venv/
 __pycache__/
 *.py[cod]
 .pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.tox/
+.nox/
 .coverage
+.coverage.*
+coverage.xml
 htmlcov/
+
+# ===== Environment =====
+.env
+.env.*
+.python-version
+.DS_Store
+
+# ===== Data (raw + processed) =====
+data/
+processed/
+
+# ===== Databases =====
 *.db
 *.db-*
 *.sqlite*
+
+# ===== MLflow tracking store =====
+mlruns/
+
+# ===== Model / training artifacts =====
+model.pkl
+confusion_matrix.png
+*.joblib
+
+# ===== Test results =====
 test-results/
-.env
-.DS_Store
+
+# ===== DVC =====
+.dvc/
+
+# ===== Logs =====
+*.log
+logs/
+
+# ===== IDE / editors =====
+.vscode/
+.idea/
+*.iml
+*.swp
+*.swo
+*~
+
+# ===== Jupyter =====
+.ipynb_checkpoints/
+
+# ===== Build / packaging =====
+build/
+dist/
+*.egg-info/
+.eggs/
+pip-wheel-metadata/
+
+# ===== OS (Windows) =====
+Thumbs.db
+Desktop.ini
+$RECYCLE.BIN/
