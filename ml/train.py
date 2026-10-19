@@ -18,6 +18,8 @@ import matplotlib
 import pandas as pd
 
 matplotlib.use("Agg")                    # 无界面环境下保存图
+from pathlib import Path
+
 import joblib
 import matplotlib.pyplot as plt
 import mlflow
@@ -30,7 +32,6 @@ from sklearn.metrics import (
     f1_score,
     roc_auc_score,
 )
-from pathlib import Path
 
 # 仓库根目录(本文件位于 ml/ 下)
 ROOT = Path(__file__).resolve().parent.parent
